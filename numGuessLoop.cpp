@@ -10,40 +10,45 @@
 #include <random>
 
 int main() {
-    // initializing variables
-    int secretNumber, userGuess;
+    // Declaring variables
+    int userGuessInt, wait;
+    std::string userGuessStr;
 
-    int guess;
-
-    // assigning a random integer from 0-9 to secretNumber
+    // Assigning a random integer from 0-9 to secretNumber:
     std::random_device rseed;
     std::mt19937 rgen(rseed());
     std::uniform_int_distribution<int> idist(0, 9);
-    secretNumber = idist(rgen);
+    const int SECRET_NUMBER{idist(rgen)};
 
-    // Asking for user's guess
-    std::cout << "The secret number is between 0-9 \n";
-    std::cout << "Enter your guess \n\n >> ";
-    std::cin >> userGuess;
-    std::cout << "\n"
-              << std ::endl;
+    /*Executes the body code once and then continues to loop if
+    the user did not guess correctly*/
+    do {
+        // Gets the user's guess
+        std::cout << "Enter an integer guess from 0 to 9: ";
+        std::cin >> userGuessStr;
 
-            // If userGuess us not within the 0-9 range
-            if (userGuess < 0 && userGuess < 9) {
-                    std::cout << "Your guess has to be between 0-9";
-                } else {
-                    // If userGuess matches secretNumber, tell
-                    // the user the results and end using break
-                    while (userGuess == secretNumber) {
-                        std::cout << "Correct Guess!!!";
-                        break;
-                    }
+        // Tries casting the user's number to an integer
+        try {
+            userGuessInt = std::stoi(userGuessStr);
 
-                    // If that is not the case, loop and
-                    // re-ask the question until correct
-                    if (userGuess != secretNumber) {
-                        std::cout << "Incorrect Guess\n";
-                        return main();
-                    }
-                }
+            // Tells the user to restart if they did not enter a number.
+        } catch (const std::exception) {
+            std::cout << "You must enter a positive integer.\n";
+            std::cout << "Please try again.";
+            std::cin >> wait;
+        }
+
+        // Breaks the loop if the user guessed correctly
+        if (userGuessInt == SECRET_NUMBER) {
+            break;
+
+            /*Tells the user they guessed incorrectly. User is then
+            asked for another guess*/
+        } else {
+            std::cout << "Incorrect. Try again.\n\n";
+        }
+    } while (userGuessInt != SECRET_NUMBER);
+
+    // Message telling the user that they guessed correctly
+    std::cout << "Correct!\n";
 }
